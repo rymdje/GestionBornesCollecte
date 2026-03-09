@@ -1,0 +1,88 @@
+﻿<Window x:Class="GestionBornesCollecte.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:GestionBornesCollecte.ViewModels"
+        xmlns:conv="clr-namespace:GestionBornesCollecte.Converters"
+        Title="Gestion des Bornes de Collecte" Height="520" Width="900">
+
+    <!-- On déclare le converter ici pour pouvoir l'utiliser -->
+    <Window.Resources>
+        <conv:NiveauToColorConverter x:Key="NiveauToColor"/>
+    </Window.Resources>
+
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+
+    <DockPanel Margin="10">
+
+        <!-- Bandeau haut : boutons -->
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+            <Button Content="Rafraîchir" Width="120" Margin="0,0,10,0"
+                    Command="{Binding RefreshCommand}"/>
+            <Button Content="Top 10 pleines" Width="130"
+                    Command="{Binding Top10Command}"/>
+        </StackPanel>
+
+        <!-- Corps : liste + détails -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Liste des bornes avec couleurs -->
+            <ListView Grid.Column="0"
+                      ItemsSource="{Binding Bornes}"
+                      SelectedItem="{Binding SelectedBorne}">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Background"
+                                Value="{Binding NiveauRemplissage,
+                                Converter={StaticResource NiveauToColor}}"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Id" Width="40"
+                                        DisplayMemberBinding="{Binding IdBorne}"/>
+                        <GridViewColumn Header="Nom" Width="160"
+                                        DisplayMemberBinding="{Binding Nom}"/>
+                        <GridViewColumn Header="Remplissage %" Width="100"
+                                        DisplayMemberBinding="{Binding NiveauRemplissage}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <!-- Panneau détails -->
+            <Border Grid.Column="1" Margin="10,0,0,0" Padding="15"
+                    BorderThickness="1" BorderBrush="#AAAAAA" CornerRadius="6">
+                <StackPanel>
+                    <TextBlock Text="Détails de la borne"
+                               FontSize="16" FontWeight="Bold" Margin="0,0,0,12"/>
+
+                    <!-- Indicateur couleur + nom -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <Ellipse Width="16" Height="16" Margin="0,0,8,0"
+                                 Fill="{Binding SelectedBorne.NiveauRemplissage,
+                                 Converter={StaticResource NiveauToColor}}"/>
+                        <TextBlock Text="{Binding SelectedBorne.Nom}"
+                                   FontSize="15" FontWeight="SemiBold"/>
+                    </StackPanel>
+
+                    <TextBlock Text="{Binding SelectedBorne.Adresse}"
+                               Margin="0,4,0,0"/>
+                    <TextBlock Margin="0,8,0,0"
+                               Text="{Binding SelectedBorne.NiveauRemplissage,
+                               StringFormat=Remplissage : {0} %}"/>
+                    <TextBlock Margin="0,8,0,0"
+                               Text="{Binding SelectedBorne.Latitude,
+                               StringFormat=Latitude : {0}}"/>
+                    <TextBlock Text="{Binding SelectedBorne.Longitude,
+                               StringFormat=Longitude : {0}}"/>
+                </StackPanel>
+            </Border>
+
+        </Grid>
+    </DockPanel>
+</Window>
