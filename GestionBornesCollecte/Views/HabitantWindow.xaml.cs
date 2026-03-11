@@ -14,14 +14,18 @@ using System.Windows.Shapes;
 
 namespace GestionBornesCollecte.Views
 {
-    /// <summary>
-    /// Logique d'interaction pour HabitantWindow.xaml
-    /// </summary>
     public partial class HabitantWindow : Window
     {
         public HabitantWindow()
         {
             InitializeComponent();
+        }
+
+        private void BtnRetour_Click(object sender, RoutedEventArgs e)
+        {
+            var login = new LoginWindow();
+            login.Show();
+            this.Close();
         }
     }
 }
