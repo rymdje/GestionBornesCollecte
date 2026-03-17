@@ -16,6 +16,13 @@ namespace GestionBornesCollecte.Views
         public MainWindow()
         {
             InitializeComponent();
+
+            // MainWindow lance LoginWindow au démarrage
+            LoginWindow login = new LoginWindow();
+            login.Show();
+
+            // On cache MainWindow, elle sert juste de point de départ
+            this.Hide();
         }
     }
 }
